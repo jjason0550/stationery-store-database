@@ -18,7 +18,7 @@
 <div><button data-q="SELECT ProductName, Price, StockQuantity FROM PRODUCTS;">查詢所有商品</button><button data-q="SELECT ProductName, StockQuantity, MinStock FROM PRODUCTS WHERE StockQuantity &lt;= MinStock;">查詢低庫存</button><button data-q="SELECT c.CategoryName, COUNT(p.ProductID) AS 商品數 FROM CATEGORIES c LEFT JOIN PRODUCTS p ON p.CategoryID=c.CategoryID GROUP BY c.CategoryID, c.CategoryName;">分類商品數</button><button data-q="SELECT m.Name, COUNT(o.OrderID) AS 訂單數, COALESCE(SUM(o.TotalAmount),0) AS 消費總額 FROM MEMBERS m LEFT JOIN ORDERS o ON o.MemberID=m.MemberID GROUP BY m.MemberID,m.Name;">會員消費統計</button></div>
 <textarea id="sql" spellcheck="false">SELECT ProductName, Price, StockQuantity FROM PRODUCTS;</textarea><br><button id="run">執行查詢</button><div id="output" aria-live="polite"></div></section>
 <section class="card"><h2>四、結果比較</h2><p><b>範例 A：</b><code>SELECT * FROM PRODUCTS;</code> 會顯示所有商品。</p><p><b>範例 B：</b><code>SELECT * FROM PRODUCTS WHERE StockQuantity &lt;= MinStock;</code> 只顯示庫存低於或等於安全庫存的商品。</p><p>差異原因：WHERE 條件會篩選資料列；若拿掉條件，查詢就會回傳全部商品。</p></section>
-<section class="card"><h2>專案檔案</h2><p><a href="sql/create_tables.sql">建立資料表 SQL</a> · <a href="sql/sample_data.sql">範例資料 SQL</a></p><p class="hint">範例會員與交易資料皆為虛構。SQL.js 需網路連線才能載入。</p></section>
+<section class="card"><h2>專案檔案</h2><p><a href="management.html">前往商品新增與訂單管理系統 →</a></p><p><a href="sql/create_tables.sql">建立資料表 SQL</a> · <a href="sql/sample_data.sql">範例資料 SQL</a></p><p class="hint">範例會員與交易資料皆為虛構。SQL.js 需網路連線才能載入。</p></section>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 <script>
