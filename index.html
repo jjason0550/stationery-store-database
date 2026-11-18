@@ -5,15 +5,44 @@
 <title>智慧文具店資料庫管理系統</title>
 <style>
 :root{font-family:system-ui,"Noto Sans TC",sans-serif;color:#203040;background:#f3f6fb}body{margin:0}header{background:#233e66;color:white;padding:32px max(20px,calc((100% - 1000px)/2))}main{max-width:1000px;margin:24px auto;padding:0 18px}.card{background:white;border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 3px 14px #20304012}h1{margin:0 0 8px}h2{margin-top:0;color:#294e7a}code,pre,textarea{font-family:ui-monospace,Consolas,monospace}textarea{box-sizing:border-box;width:100%;min-height:125px;padding:12px;border:1px solid #b8c7d9;border-radius:8px;font-size:14px}button{background:#285b92;color:white;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;margin:8px 8px 8px 0}button:hover{background:#173e68}.hint{color:#536779}.pill{display:inline-block;background:#e8f1fc;border-radius:20px;padding:5px 10px;margin:3px}table{border-collapse:collapse;width:100%;margin-top:12px;overflow-wrap:anywhere}th,td{border:1px solid #d9e2ec;padding:8px;text-align:left}th{background:#edf3f9}#output{overflow:auto}.error{color:#a12a2a;white-space:pre-wrap}
+.erd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px;margin:18px 0}.entity{border:1px solid #b9cbe0;border-radius:10px;overflow:hidden;background:#fff}.entity h3{margin:0;padding:10px 13px;background:#e8f1fc;color:#244c78;font-size:16px}.entity ul{list-style:none;margin:0;padding:10px 13px}.entity li{padding:4px 0;border-bottom:1px solid #edf1f5;font-size:14px}.entity li:last-child{border:0}.pk{font-weight:700;color:#165b9a}.fk{font-weight:700;color:#a15b12}.key{font-size:12px;color:#5b6b7b;margin:8px 0}.relations{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.relation{background:#f4f7fb;border-radius:8px;padding:12px;font-size:14px}.relation b{color:#244c78}.erd-note{background:#fff8e8;border-left:4px solid #e4ad43;padding:12px;border-radius:6px;font-size:14px}@media(max-width:600px){header{padding:25px 18px}.card{padding:16px}.erd-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header><h1>智慧文具店資料庫管理系統</h1><div>整合會員、商品分類、商品價格、訂單與庫存異動的資料庫學習專題</div></header>
 <main>
 <section class="card"><h2>一、案例背景</h2><p>店長需要查詢會員消費、商品價格與庫存，店員需要快速找出低庫存商品；本系統透過關聯式資料庫整合資料，減少人工查找與重複紀錄。</p><span class="pill">會員管理</span><span class="pill">商品分類</span><span class="pill">訂單分析</span><span class="pill">庫存管理</span></section>
-<section class="card"><h2>二、資料庫設計</h2><p>六張資料表以主鍵與外鍵關聯：</p><pre>MEMBERS ── ORDERS ── ORDER_DETAILS ── PRODUCTS ── CATEGORIES
-                                             └──── INVENTORY_LOG</pre>
-<ul><li><b>MEMBERS</b>：MemberID、Name、Phone、Points、JoinDate</li><li><b>CATEGORIES</b>：CategoryID、CategoryName</li><li><b>PRODUCTS</b>：ProductID、ProductName、CategoryID、Price、StockQuantity、MinStock</li><li><b>ORDERS</b>：OrderID、MemberID、OrderDate、TotalAmount</li><li><b>ORDER_DETAILS</b>：DetailID、OrderID、ProductID、Quantity、UnitPrice</li><li><b>INVENTORY_LOG</b>：LogID、ProductID、ChangeType、ChangeQuantity、ChangeDate</li></ul></section>
+<section class="card"><h2>二、資料庫設計：新版 E-R 圖與 ERD</h2>
+<p>本系統採用六張關聯式資料表，使用主鍵（PK）唯一識別資料，並以外鍵（FK）建立資料表之間的關聯。</p>
+<div class="key"><span class="pk">PK</span> 主鍵　 <span class="fk">FK</span> 外鍵</div>
+<h3>（一）E-R 實體關聯圖</h3>
+<div class="erd-grid">
+ <article class="entity"><h3>MEMBERS｜會員</h3><ul><li><span class="pk">PK</span> MemberID</li><li>Name</li><li>Phone</li><li>Points</li><li>JoinDate</li></ul></article>
+ <article class="entity"><h3>ORDERS｜訂單</h3><ul><li><span class="pk">PK</span> OrderID</li><li><span class="fk">FK</span> MemberID</li><li>OrderDate</li><li>TotalAmount</li></ul></article>
+ <article class="entity"><h3>ORDER_DETAILS｜訂單明細</h3><ul><li><span class="pk">PK</span> DetailID</li><li><span class="fk">FK</span> OrderID</li><li><span class="fk">FK</span> ProductID</li><li>Quantity</li><li>UnitPrice</li></ul></article>
+ <article class="entity"><h3>PRODUCTS｜商品</h3><ul><li><span class="pk">PK</span> ProductID</li><li>ProductName</li><li><span class="fk">FK</span> CategoryID</li><li>Price</li><li>StockQuantity</li><li>MinStock</li></ul></article>
+ <article class="entity"><h3>CATEGORIES｜商品分類</h3><ul><li><span class="pk">PK</span> CategoryID</li><li>CategoryName</li></ul></article>
+ <article class="entity"><h3>INVENTORY_LOG｜庫存異動</h3><ul><li><span class="pk">PK</span> LogID</li><li><span class="fk">FK</span> ProductID</li><li>ChangeType</li><li>ChangeQuantity</li><li>ChangeDate</li></ul></article>
+</div>
+<h3>（二）實體關係與基數</h3>
+<div class="relations">
+ <div class="relation"><b>MEMBERS 1 ── N ORDERS</b><br>一位會員可以建立多筆訂單；一筆訂單最多對應一位會員。</div>
+ <div class="relation"><b>ORDERS 1 ── N ORDER_DETAILS</b><br>一張訂單包含一筆或多筆商品明細。</div>
+ <div class="relation"><b>PRODUCTS 1 ── N ORDER_DETAILS</b><br>同一商品可以出現在不同訂單明細中。</div>
+ <div class="relation"><b>CATEGORIES 1 ── N PRODUCTS</b><br>一個商品分類可以包含多項商品。</div>
+ <div class="relation"><b>PRODUCTS 1 ── N INVENTORY_LOG</b><br>一項商品可以有多筆進貨、銷售或盤點異動紀錄。</div>
+</div>
+<h3>（三）ERD 欄位定義</h3>
+<table><thead><tr><th>資料表</th><th>欄位</th><th>型態</th><th>鍵值／用途</th></tr></thead><tbody>
+<tr><td>MEMBERS</td><td>MemberID</td><td>TEXT</td><td>PK，會員編號</td></tr><tr><td>MEMBERS</td><td>Name、Phone、Points、JoinDate</td><td>TEXT／INTEGER</td><td>姓名、電話、點數、加入日期</td></tr>
+<tr><td>CATEGORIES</td><td>CategoryID</td><td>TEXT</td><td>PK，分類編號</td></tr><tr><td>CATEGORIES</td><td>CategoryName</td><td>TEXT</td><td>分類名稱（不可重複）</td></tr>
+<tr><td>PRODUCTS</td><td>ProductID</td><td>TEXT</td><td>PK，商品編號</td></tr><tr><td>PRODUCTS</td><td>ProductName、Price</td><td>TEXT／REAL</td><td>商品名稱、售價</td></tr><tr><td>PRODUCTS</td><td>CategoryID</td><td>TEXT</td><td>FK → CATEGORIES.CategoryID</td></tr><tr><td>PRODUCTS</td><td>StockQuantity、MinStock</td><td>INTEGER</td><td>現有庫存、安全庫存量</td></tr>
+<tr><td>ORDERS</td><td>OrderID</td><td>TEXT</td><td>PK，訂單編號</td></tr><tr><td>ORDERS</td><td>MemberID</td><td>TEXT</td><td>FK → MEMBERS.MemberID，可為 NULL</td></tr><tr><td>ORDERS</td><td>OrderDate、TotalAmount</td><td>TEXT／REAL</td><td>訂單日期、總金額</td></tr>
+<tr><td>ORDER_DETAILS</td><td>DetailID</td><td>TEXT</td><td>PK，明細編號</td></tr><tr><td>ORDER_DETAILS</td><td>OrderID、ProductID</td><td>TEXT</td><td>FK → ORDERS.OrderID、PRODUCTS.ProductID</td></tr><tr><td>ORDER_DETAILS</td><td>Quantity、UnitPrice</td><td>INTEGER／REAL</td><td>購買數量、成交單價</td></tr>
+<tr><td>INVENTORY_LOG</td><td>LogID</td><td>TEXT</td><td>PK，異動編號</td></tr><tr><td>INVENTORY_LOG</td><td>ProductID</td><td>TEXT</td><td>FK → PRODUCTS.ProductID</td></tr><tr><td>INVENTORY_LOG</td><td>ChangeType、ChangeDate</td><td>TEXT</td><td>異動類型、異動日期</td></tr><tr><td>INVENTORY_LOG</td><td>ChangeQuantity</td><td>INTEGER</td><td>異動數量（銷售通常為負數）</td></tr>
+</tbody></table>
+<p class="erd-note"><b>設計備註：</b>訂單可不綁定會員（MemberID 允許 NULL）；商品分類欄位目前也允許 NULL。訂單明細記錄成交當下的 UnitPrice，避免商品日後調價影響歷史訂單金額。</p>
+</section>
 <section class="card"><h2>三、SQL 查詢練習</h2><p class="hint">可編輯 SQL 後按「執行查詢」。此練習區僅允許 SELECT 查詢。資料庫由瀏覽器中的 SQL.js 建立，不會上傳你的查詢內容。</p>
 <div><button data-q="SELECT ProductName, Price, StockQuantity FROM PRODUCTS;">查詢所有商品</button><button data-q="SELECT ProductName, StockQuantity, MinStock FROM PRODUCTS WHERE StockQuantity &lt;= MinStock;">查詢低庫存</button><button data-q="SELECT c.CategoryName, COUNT(p.ProductID) AS 商品數 FROM CATEGORIES c LEFT JOIN PRODUCTS p ON p.CategoryID=c.CategoryID GROUP BY c.CategoryID, c.CategoryName;">分類商品數</button><button data-q="SELECT m.Name, COUNT(o.OrderID) AS 訂單數, COALESCE(SUM(o.TotalAmount),0) AS 消費總額 FROM MEMBERS m LEFT JOIN ORDERS o ON o.MemberID=m.MemberID GROUP BY m.MemberID,m.Name;">會員消費統計</button></div>
 <textarea id="sql" spellcheck="false">SELECT ProductName, Price, StockQuantity FROM PRODUCTS;</textarea><br><button id="run">執行查詢</button><div id="output" aria-live="polite"></div></section>
